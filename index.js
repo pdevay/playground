@@ -50,13 +50,16 @@ var resetTransform = function() {
   }
 }
 
-player.onclick = function() {
+var startUp = function() {
 
   if(player.classList.contains("transformed"))
     resetTransform()
   else
     addTransform(12, 0)
 }
+
+player.addEventListener('click', startUp, false);
+player.addEventListener('touchstart', startUp, false);
 
 getShapes()
 cloneShapes(30)

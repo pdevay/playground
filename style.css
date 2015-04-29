@@ -20,5 +20,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(10deg);
+  -webkit-transform: translate(-50%, -50%) rotate(10deg);
   transition: all 2000ms;
 }

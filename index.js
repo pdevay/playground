@@ -28,11 +28,14 @@ var addTransform = function(baseRotation, baseScale) {
 
     var currStyle = getComputedStyle(thisShape).getPropertyValue('transform')
     var newStyle = "rotate(" + (i * baseRotation) + "deg) translate(-50%, -50%)"
-    var newSize = ((baseScale * i) + 10) + "vh"
+    var newSize = ((baseScale) + 10) + "vh"
 
-    thisShape.style.transform = newStyle.toString()
-    thisShape.style.width = newSize.toString()
-    thisShape.style.height = newSize.toString()
+    console.log(thisShape.style)
+
+    thisShape.style.transform = newStyle
+    thisShape.style.webkitTransform = newStyle
+    thisShape.style.width = newSize
+    thisShape.style.height = newSize
   }
 }
 
@@ -45,21 +48,25 @@ var resetTransform = function() {
     var thisShape = getShapes[i]
 
     thisShape.style.transform = null
+    thisShape.style.webkitTransform = null
     thisShape.style.width = null
     thisShape.style.height = null
   }
 }
 
-var startUp = function() {
+var startUp = function(event) {
+
+  event.preventDefault()
 
   if(player.classList.contains("transformed"))
     resetTransform()
   else
-    addTransform(12, 0)
+    addTransform(12, 3)
 }
 
 player.addEventListener('click', startUp, false);
-player.addEventListener('touchstart', startUp, false);
+player.addEventListener('touchend', startUp, false);
 
 getShapes()
 cloneShapes(30)
+addTransform(12, 3)

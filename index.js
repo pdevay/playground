@@ -50,7 +50,7 @@ var resetTransform = function() {
   }
 }
 
-document.onclick = function() {
+player.onclick = function() {
 
   if(player.classList.contains("transformed"))
     resetTransform()

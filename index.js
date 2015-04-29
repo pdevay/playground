@@ -5,6 +5,8 @@ var shape = null
 var rotater = 32
 var scaler = .25
 var shapeNum = 36
+var originX = 0
+var originY = 0
 
 var getShapes = function() {
 
@@ -12,7 +14,7 @@ var getShapes = function() {
 
 // Basic Add Transformation Function
 
-var addTransform = function(baseRotation, baseScale) {
+var addTransform = function(baseRotation, baseScale, originX, originY) {
   var getShapes = document.querySelectorAll(".shape")
   player.classList.add("transformed")
 
@@ -32,6 +34,7 @@ var addTransform = function(baseRotation, baseScale) {
     thisShape.style.width = newSize
     thisShape.style.height = newSize
     thisShape.style.opacity = opacity
+    thisShape.style.transformOrigin = (originX + "%") + " " + (originY + "%") + " 0px"
   }
 }
 
@@ -189,3 +192,27 @@ var removeShapes = function(e) {
 
 makeButton(shapesUp, addShapes)
 makeButton(shapesDown, removeShapes)
+
+// Change Transform Origin
+
+var transformXup = document.querySelector("#originX-up")
+var transformYup = document.querySelector("#originY-up")
+
+var increaseOriginX = function(e) {
+  e.preventDefault()
+
+  originX = originX + 10
+
+  addTransform(rotater, scaler, originX, originY)
+}
+
+var increaseOriginY = function(e) {
+  e.preventDefault()
+
+  originY = originY + 10
+
+  addTransform(rotater, scaler, originX, originY)
+}
+
+makeButton(transformXup, increaseOriginX)
+makeButton(transformYup, increaseOriginY)

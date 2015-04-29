@@ -2,8 +2,8 @@ var player = document.querySelector(".player")
 var baseShape = document.querySelector("#mainShape")
 var baseClasses = baseShape.classList
 var shape = null
-var rotater = 24
-var scaler = 1
+var rotater = 32
+var scaler = .25
 var shapeNum = 36
 
 var getShapes = function() {
@@ -21,9 +21,11 @@ var addTransform = function(baseRotation, baseScale) {
     var thisShape = getShapes[i]
 
     var currStyle = getComputedStyle(thisShape).getPropertyValue('transform')
-    var newStyle = "rotate(" + ((i + 1) * baseRotation) + "deg) translate(-50%, -50%)"
+    var newStyle = "rotate(" + (i * baseRotation) + "deg) translate(-50%, -50%)"
     var newSize = ((baseScale * i) + 10) + "vh"
-    var opacity = 1 - (i * .01)
+
+    console.log(getShapes.length, i)
+    var opacity = (getShapes.length - i) / getShapes.length + .25
 
     thisShape.style.transform = newStyle
     thisShape.style.webkitTransform = newStyle

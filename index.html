@@ -8,18 +8,47 @@
 <body>
 
   <div class="controls">
-    <a class="button" id="rotation-up" href="#">Rotation Up</a>
-    <a class="button" id="rotation-down" href="#">Rotation Down</a>
-    <a class="button" id="scale-up" href="#">Scale Up</a>
-    <a class="button" id="scale-down" href="#">Scale Down</a>
-    <a class="button" id="shapes-up" href="#">More Shapes</a>
-    <a class="button" id="shapes-down" href="#">Less Shapes</a>
-    <a class="button" id="originX-up" href="#">X Origin Up</a>
-    <a class="button" id="originY-up" href="#">Y Origin Up</a>
+
+    <p class="sliderLabel">Rotation<span class="sliderValue"></span></p>
+    <input type="range" min="0" max="89" id="slider-rotation">
+
+    <p class="sliderLabel">Scale<span class="sliderValue"></span></p>
+    <input type="range" min="0" max="50" id="slider-scale">
+
+    <p class="sliderLabel">Clones<span class="sliderValue"></span></p>
+    <input type="range" min="0" max="150" id="slider-shapes">
+
+    <p class="sliderLabel">Origin X<span class="sliderValue"></span></p>
+    <input type="range" min="-100" max="100" id="slider-originX">
+
+    <p class="sliderLabel">Origin Y<span class="sliderValue"></span></p>
+    <input type="range" min="-100" max="100" id="slider-originY">
+
+    <p class="sliderLabel">Animation<span class="sliderValue"></span></p>
+    <input type="range" class="switch" min="0" max="1" id="slider-animate">
+
+    <p class="label">Base Shape<span class="value"></span></p>
+    <div class="shapeContainer">
+      <div class="shapeSwitch" id="squareSwitch"></div>
+      <div class="shapeSwitch" id="circleSwitch"></div>
+      <div class="shapeSwitch" id="triangleSwitch"><svg version="1.1" id="triangleShape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 130"><polygon points="0,130 75,0 150,130"/></svg></div>
+      <div class="shapeSwitch" id="hexagonSwitch"><svg version="1.1" id="hexagonShape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 175 150"><polygon points="45,150 0,75 45,0 130,0
+  175,75 130,150"/></svg></div>
+      <div class="shapeSwitch" id="starSwitch"></div>
+    </div>
   </div>
 
-  <div class="player">
-    <div class="shape square" id="mainShape"></div>
+  <div class="player rotating">
+    <div class="shape square" id="mainShape">
+      <svg version="1.1" id="triangleShape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 130">
+        <polygon points="0,130 75,0 150,130"/>
+      </svg>
+
+      <svg version="1.1" id="hexagonShape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 175 150">
+        <polygon points="45,150 0,75 45,0 130,0
+  175,75 130,150"/>
+      </svg>
+    </div>
   </div>
 
   <script src="index.js" type="text/javascript"></script>

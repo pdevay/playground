@@ -2,31 +2,28 @@ var player = document.querySelector(".player")
 var baseShape = document.querySelector("#mainShape")
 var baseClasses = baseShape.classList
 var shape = null
-var rotater = 32
-var scaler = .25
-var shapeNum = 36
+var rotater = 7
+var scaler = 1
+var cloneNum = 36
 var originX = 0
 var originY = 0
-
-var getShapes = function() {
-
-}
+var gradientMultiplier = 2
+var allShapes = document.querySelectorAll("div[class*='shape'], div[class*=' shape']")
 
 // Basic Add Transformation Function
 
-var addTransform = function(baseRotation, baseScale, originX, originY) {
+var addTransform = function(rotater, scaler, originX, originY) {
   var getShapes = document.querySelectorAll(".shape")
   player.classList.add("transformed")
 
   for (var i = 0; i < getShapes.length; i++) {
-    var rotationAmt = i * baseRotation
+    var rotationAmt = i * rotater
     var thisShape = getShapes[i]
 
     var currStyle = getComputedStyle(thisShape).getPropertyValue('transform')
-    var newStyle = "rotate(" + (i * baseRotation) + "deg) translate(-50%, -50%)"
-    var newSize = ((baseScale * i) + 10) + "vh"
+    var newStyle = "rotate(" + (i * rotater) + "deg) translate(-50%, -50%)"
+    var newSize = (Math.pow(scaler / 10, i / 5) + 5) + "vh"
 
-    console.log(getShapes.length, i)
     var opacity = (getShapes.length - i) / getShapes.length + .25
 
     thisShape.style.transform = newStyle
@@ -66,25 +63,38 @@ var makeButton = function(el, f) {
 
 var startUp = function() {
 
-  if(player.classList.contains("transformed"))
+  if(player.classList.contains("transformed")) {
     resetTransform()
-  else
+  }
+  else {
     addTransform(rotater, scaler)
+  }
 }
 
-makeButton(player, startUp)
+player.addEventListener('click', startUp, false)
+player.addEventListener('touchend', startUp, false)
 
-// player.addEventListener('click', startUp, false)
-// player.addEventListener('touchend', startUp, false)
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
 
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = 0, len = this.length; i < len; i++) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
 
-var cloneShapes = function(shapeNum) {
-  var currShapes = player.children.length
-  var needMoreShapes = shapeNum + 1 > currShapes
-  var noShapes = currShapes === 1
+var cloneShapes = function(cloneNum) {
+  var clones = document.querySelectorAll("div[class*='clone'], div[class*=' clone']")
+
+  var currClones = clones.length
+  var needMoreShapes = cloneNum > currClones
+  var noShapes = currClones === 0
 
   if(noShapes) {
-    for(var i = 0; i < shapeNum; i++) {
+    for(var i = 0; i < cloneNum; i++) {
       var cln = baseShape.cloneNode(true)
       player.appendChild(cln)
 
@@ -96,7 +106,7 @@ var cloneShapes = function(shapeNum) {
   }
 
   else if(needMoreShapes) {
-    for (var i = currShapes - 1; i < shapeNum; i++) {
+    for (var i = currClones; i < cloneNum; i++) {
       var cln = baseShape.cloneNode(true)
       player.appendChild(cln)
 
@@ -107,112 +117,159 @@ var cloneShapes = function(shapeNum) {
     addTransform(rotater, scaler)
   }
 
-  else {
-    console.log('removing shape ' + shapeNum)
-    player.removeChild(player.childNodes[shapeNum + 3])
+  else if(currClones > cloneNum) {
+    for(var i = currClones - 1; i >= cloneNum; i--) {
+      clones[i].remove()
+    }
+    addTransform(rotater, scaler)
   }
+
+  else return
+
+  allShapes = document.querySelectorAll("div[class*='shape'], div[class*=' shape']")
 }
 
 // Initialize
+cloneShapes(cloneNum)
 
-cloneShapes(shapeNum)
+// Get Value of Sliders
 
+var allSliders = document.querySelectorAll("input[type='range']")
+var allLabels = document.querySelectorAll(".sliderValue")
 
-// Add/Remove Rotation
+var swapValues = function(slider, label) {
+  label.innerHTML = slider.value
 
-var rotationUp = document.querySelector("#rotation-up")
-var rotationDown = document.querySelector("#rotation-down")
+  var sliderID = slider.getAttribute("id").replace("slider-", "")
 
-var addRotation = function(e) {
-  e.preventDefault()
-
-  console.log('adding rotation')
-  rotater = rotater + 1
-
-  addTransform(rotater, scaler)
+  switch (sliderID) {
+    case "shapes":
+      cloneNum = parseInt(slider.value)
+      cloneShapes(cloneNum)
+      break
+    case "rotation":
+      rotater = parseInt(slider.value)
+      addTransform(rotater, scaler, originX, originY)
+      break
+    case "scale":
+      scaler = parseInt(slider.value)
+      addTransform(rotater, scaler, originX, originY)
+      break
+    case "originX":
+      originX = parseInt(slider.value)
+      addTransform(rotater, scaler, originX, originY)
+      break
+    case "originY":
+      originY = parseInt(slider.value)
+      addTransform(rotater, scaler, originX, originY)
+      break
+    case "animate":
+      console.log('toggle')
+      player.classList.toggle('rotating')
+      if(slider.value == 1)
+        label.innerHTML = "On"
+      else
+        label.innerHTML = "Off"
+      break
+  }
 }
 
-var removeRotation = function(e) {
-  e.preventDefault()
+var setSliders = function(slider, label) {
 
-  console.log('adding rotation')
-  rotater = rotater - 1
+  var sliderID = slider.getAttribute("id").replace("slider-", "")
 
-  addTransform(rotater, scaler)
+  switch (sliderID) {
+    case "shapes":
+      slider.value = cloneNum
+      break
+    case "rotation":
+      slider.value = rotater
+      break
+    case "scale":
+      slider.value = scaler
+      break
+    case "originX":
+      slider.value = originX
+      break
+    case "originY":
+      slider.value = originY
+      break
+    case "animate":
+      if(slider.value == 1)
+        label.innerHTML = "On"
+      else
+        label.innerHTML = "Off"
+      break
+  }
 }
 
-makeButton(rotationUp, addRotation)
-makeButton(rotationDown, removeRotation)
+var getSliderValue = function(slider, label) {
+  if(slider.classList.contains('switch')) {
+    if(slider.value == 1)
+        label.innerHTML = "On"
+    else
+      label.innerHTML = "Off"
+  }
+  else {
+    label.innerHTML = slider.value
+  }
 
-// Add/Remove Scale
-
-var scaleUp = document.querySelector("#scale-up")
-var scaleDown = document.querySelector("#scale-down")
-
-var addScale = function(e) {
-  e.preventDefault()
-
-  scaler = scaler + .25
-
-  addTransform(rotater, scaler)
+  slider.addEventListener("input", function() {
+    swapValues(slider, label)
+  })
 }
 
-var removeScale = function(e) {
-  e.preventDefault()
+for(var i = 0; i < allSliders.length; i++) {
 
-  scaler = scaler - .25
+  var slider = allSliders[i]
+  var label = allLabels[i]
 
-  addTransform(rotater, scaler)
+  setSliders(slider, label)
+  getSliderValue(slider, label)
 }
 
-makeButton(scaleUp, addScale)
-makeButton(scaleDown, removeScale)
+// Change Shapes
 
-// Add/Remove Elements
+var shapeSwitches = document.querySelectorAll('.shapeSwitch')
 
-var shapesUp = document.querySelector("#shapes-up")
-var shapesDown = document.querySelector("#shapes-down")
-
-
-var addShapes = function(e) {
-  e.preventDefault()
-
-  shapeNum = shapeNum + 1
-
-  cloneShapes(shapeNum)
+var shapeSwitch = function(switchID, shapeToChange) {
+  switch (switchID) {
+    case "square":
+      shapeToChange.classList.remove("circle", "triangle", "hexagon")
+      shapeToChange.classList.add("square")
+      break
+    case "circle":
+      shapeToChange.classList.remove("square", "triangle", "hexagon")
+      shapeToChange.classList.add("circle")
+      break
+    case "triangle":
+      shapeToChange.classList.remove("circle", "square", "hexagon")
+      shapeToChange.classList.add("triangle")
+      break
+    case "hexagon":
+      shapeToChange.classList.remove("circle", "triangle", "square")
+      shapeToChange.classList.add("hexagon")
+      break
+  }
 }
 
-var removeShapes = function(e) {
-  e.preventDefault()
+var changeShapes = function(switchID) {
 
-  shapeNum = shapeNum - 1
+  shapeSwitch(switchID, baseShape)
 
-  cloneShapes(shapeNum)
+  for(var i = 0; i < allShapes.length; i++) {
+    shapeSwitch(switchID, allShapes[i])
+  }
 }
 
-makeButton(shapesUp, addShapes)
-makeButton(shapesDown, removeShapes)
+var addSwitches = function(shapeSwitch) {
+  var switchID = shapeSwitch.getAttribute("id").replace("Switch", "")
 
-// Change Transform Origin
-
-var transformXup = document.querySelector("#originX-up")
-var transformYup = document.querySelector("#originY-up")
-
-var increaseOriginX = function(e) {
-  e.preventDefault()
-
-  originX = originX + 10
-
-  addTransform(rotater, scaler, originX, originY)
+  shapeSwitch.addEventListener("click", function() {
+    changeShapes(switchID)
+  })
 }
 
-var increaseOriginY = function(e) {
-  e.preventDefault()
-
-  originY = originY + 10
-
-  addTransform(rotater, scaler, originX, originY)
+for(var i = 0; i < shapeSwitches.length; i++) {
+  addSwitches(shapeSwitches[i])
 }
-
-makeButton(transformXup, increaseOriginX)
-makeButton(transformYup, increaseOriginY)

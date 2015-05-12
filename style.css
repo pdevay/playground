@@ -21,10 +21,12 @@ body {
   left: 0;
   padding: 0;
   margin: 0;
+  -webkit-transform-origin: 50% 50%;
+}
+
+.rotating {
   animation: slowtate 60s infinite;
   -webkit-animation: slowtate 60s infinite;
-  animation-delay: 1500ms;
-  -webkit-animation-delay: 1500ms;
   animation-timing-function: linear;
   -webkit-animation-timing-function: linear;
 }
@@ -45,17 +47,13 @@ body {
 
 .shape {
   display: block;
-  border: 1px solid #5ce;
-  background: transparent;
-}
-
-.square {
   position: absolute;
   width: 8vh;
   height: 8vh;
+  border: 1px solid #5ce;
+  background: transparent;
   top: 50%;
   left: 50%;
-  border-radius: 10%;
   transform: translate(-50%, -50%) rotate(10deg);
   -webkit-transform: translate(-50%, -50%) rotate(10deg);
   transition: all 1500ms;
@@ -65,13 +63,77 @@ body {
   -webkit-transition-timing-function: cubic-bezier(0.5, -0.2, 0.5, 1.2);
 }
 
+div[class*='clone'], div[class*=' clone'] {
+}
+
+.square {
+  border-radius: 10%;
+}
+
+.circle {
+  border-radius: 100%;
+}
+
+.triangle, .hexagon {
+  border: none;
+}
+
+.triangle #triangleShape {
+  display: block;
+}
+
+.hexagon #hexagonShape {
+  display: block;
+}
+
+#triangleShape, #hexagonShape {
+  display: none;
+  stroke: #5ce;
+  fill: none;
+  stroke-width: 1px;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  height: 16px;
+  background: rgba(0,0,0,.5);
+  outline: none;
+  border-radius: 10px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  background: #545;
+  display: block;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  border-radius: 100%;
+}
+
+input[type='range'].switch {
+  height: 20px;
+  width: 40px;
+}
+
+input[type='range'].switch::-webkit-slider-thumb {
+  height: 20px;
+  width: 20px;
+}
+
 .controls {
   display: flex;
-  width: 100%;
+  position: relative;
+  z-index: 5;
+  width: 200px;
+  height: 100%;
+  flex-direction: column;
+  padding: 20px;
+  background: rgba(40,35,40,.85);
 }
 
 a.button {
-  flex-grow: 1;
+  flex-grow: 0;
   display: block;
   position: relative;
   z-index: 99;
@@ -82,4 +144,47 @@ a.button {
   padding: 10px;
   box-sizing: border-box;
   background: rgba(50,50,50,.5);
+}
+
+.label, .sliderLabel {
+  display: flex;
+  width: 100%;
+  font-size: .75em;
+}
+
+.sliderValue {
+  text-align: right;
+  flex-grow: 1;
+}
+
+.shapeContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.shapeSwitch {
+  display: block;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+#squareSwitch, #circleSwitch {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+}
+
+#circleSwitch {
+  border-radius: 100%;
+}
+
+#triangleSwitch #triangleShape, #hexagonSwitch #hexagonShape {
+  display: block;
+  stroke: #fff;
+  stroke-width: 6px;
+  width: 100%;
+  height: 100%;
 }
